@@ -1,13 +1,18 @@
 ---
-- name: Create user with password and shell
-  ansible.builtin.user:
-    name: "{{ user_name }}"
-    password: "{{ user_password | password_hash('sha512') }}"
-    shell: /bin/bash
-    state: present
+- name: Create user dynamically from AWX
+  hosts: all
+  become: yes
 
-- name: Add user to group
-  ansible.builtin.user:
-    name: "{{ user_name }}"
-    groups: "{{ group_name_user }}"
-    append: yes
+  tasks:
+    - name: Create user with password and shell
+      ansible.builtin.user:
+        name: "{{ user_name }}"
+        password: "{{ user_password | password_hash('sha512') }}"
+        shell: /bin/bash
+        state: present
+
+    - name: Add user to group
+      ansible.builtin.user:
+        name: "{{ user_name }}"
+        groups: "{{ group_name_user }}"
+        append: yes
