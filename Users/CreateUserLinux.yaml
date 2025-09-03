@@ -3,10 +3,10 @@
   hosts: all
   become: yes
   vars:
-    user_name: "<Enter the username to create>"
-    user_password: "<Enter the user password here>"
+    user_name: ""
+    user_password: ""
     user_shell: "/bin/bash"
-    group_name_user: "<Enter the group to add the user>"
+    group_name_user: ""
 
   tasks:
     - name: Create user with password and shell
