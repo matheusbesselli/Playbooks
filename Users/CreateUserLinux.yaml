@@ -1,23 +1,13 @@
 ---
-- name: CreateUserLinux
-  hosts: all
-  become: yes
-  vars:
-    user_name: ""
-    user_password: ""
-    user_shell: "/bin/bash"
-    group_name_user: ""
+- name: Create user with password and shell
+  ansible.builtin.user:
+    name: "{{ user_name }}"
+    password: "{{ user_password | password_hash('sha512') }}"
+    shell: /bin/bash
+    state: present
 
-  tasks:
-    - name: Create user with password and shell
-      ansible.builtin.user:
-        name: "{{ user_name }}"
-        password: "{{ user_password | password_hash('sha512') }}"
-        shell: "{{ user_shell }}"
-        state: present
-
-    - name: Add user to group
-      ansible.builtin.user:
-        name: "{{ user_name }}"
-        groups: "{{ group_name_user }}"
-        append: yes   # keeps other groups the user already belongs to
+- name: Add user to group
+  ansible.builtin.user:
+    name: "{{ user_name }}"
+    groups: "{{ group_name_user }}"
+    append: yes
