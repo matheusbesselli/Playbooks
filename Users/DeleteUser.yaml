@@ -1,0 +1,14 @@
+---
+- name: Delete user
+  hosts: all
+  become: yes
+  vars:
+    user_name: ""
+    remove_home: false
+
+  tasks:
+    - name: Remove user
+      ansible.builtin.user:
+        name: "{{ user_name }}"
+        state: absent
+        remove: "{{ remove_home | bool }}"

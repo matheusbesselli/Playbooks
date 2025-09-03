@@ -1,0 +1,14 @@
+---
+- name: Add user on group
+  hosts: all
+  become: yes
+  vars:
+    user_name: "<User here>"
+    group_name: "<Group here>"
+
+  tasks:
+    - name: Adicionar usuário ao grupo
+      ansible.builtin.user:
+        name: "{{ user_name }}"
+        groups: "{{ group_name }}"
+        append: yes   # For user not are removed on other groups

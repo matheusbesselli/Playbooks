@@ -1,0 +1,17 @@
+---
+- name: Verify service status
+  hosts: all
+  become: yes
+  vars:
+    service_name: "<Enter service name>"
+
+  tasks:
+    - name: Check service status
+      ansible.builtin.systemd:
+        name: "{{ service_name }}"
+        state: started   # ensures it is running
+      register: service_status
+
+    - name: Show service status
+      debug:
+        msg: "{{ service_name }} is {{ 'running' if service_status.status.ActiveState == 'active' else 'stopped' }}"

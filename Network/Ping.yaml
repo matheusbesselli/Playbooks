@@ -1,0 +1,9 @@
+---
+- name: Ping
+  become: no
+  tasks:
+    - name: Ping a given destination
+      ansible.netcommon.net_ping:
+        dest: "<Enter the destination IP or hostname>"
+        count: 4   # optional, number of ping packets
+---
