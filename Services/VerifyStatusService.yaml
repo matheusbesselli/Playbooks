@@ -1,6 +1,6 @@
 ---
 - name: Verify service status
-  hosts: all
+  hosts: ansible_host
   become: yes
   vars:
     service_name: "<Enter service name>"

@@ -1,6 +1,6 @@
 ---
 - name: Create user dynamically from AWX
-  hosts: all
+  hosts: ansible_host
   become: yes
 
   tasks:
