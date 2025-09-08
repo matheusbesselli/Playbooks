@@ -1,17 +1,29 @@
 ---
-- name: Verify service status
-  hosts: ansible_host
+- name: Add dynamic hosts from survey
+  hosts: localhost
+  gather_facts: false
+  vars:
+    service_name: "{{ service_name }}"
+    ansible_hosts_list: "{{ ansible_host.split(',') }}"  # comma-separated IPs
+  tasks:
+    - name: Add hosts dynamically
+      add_host:
+        name: "{{ item }}"
+        groups: dynamic_hosts
+      loop: "{{ ansible_hosts_list }}"
+
+- name: Verify service status on all hosts
+  hosts: dynamic_hosts
   become: yes
   vars:
-    service_name: "<Enter service name>"
-
+    service_name: "{{ service_name }}"
   tasks:
     - name: Check service status
       ansible.builtin.systemd:
         name: "{{ service_name }}"
-        state: started   # ensures it is running
+        state: started
       register: service_status
 
     - name: Show service status
       debug:
-        msg: "{{ service_name }} is {{ 'running' if service_status.status.ActiveState == 'active' else 'stopped' }}"
+        msg: "{{ inventory_hostname }}: {{ service_name }} is {{ 'running' if service_status.status.ActiveState == 'active' else 'stopped' }}"
