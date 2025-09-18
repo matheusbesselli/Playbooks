@@ -4,7 +4,7 @@
   gather_facts: false
   vars:
     service_name: "{{ service_name }}"
-    ansible_hosts_list: "{{ ansible_host.split(',') }}"  # comma-separated IPs
+    ansible_hosts_list: "{{ ansible_host.split(',') }}"  
   tasks:
     - name: Add hosts dynamically
       add_host:
