@@ -4,13 +4,20 @@
   gather_facts: false
   vars:
     service_name: "{{ service_name }}"
-    survey_hosts: "{{ hosts_list.split(',') }}" 
+    survey_hosts: "{{ ansible_host.split(',') }}"
   tasks:
-    - name: Add hosts dynamically (hostname from survey, IP resolved via vCenter inventory)
+    - name: Match survey hostnames with real inventory hosts
       add_host:
-        name: "{{ item }}"
+        name: "{{ item }}" 
+        ansible_host: "{{ hostvars[inventory_host].ansible_host }}"
         groups: dynamic_hosts
       loop: "{{ survey_hosts }}"
+      vars:
+        inventory_host: >-
+          {{ groups['all']
+             | select('match', '^' ~ item ~ '.*')
+             | list
+             | first }}
 
 - name: Verify service status on all hosts
   hosts: dynamic_hosts
