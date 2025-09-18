@@ -4,17 +4,18 @@
   gather_facts: false
   vars:
     service_name: "{{ service_name }}"
-    ansible_hosts_list: "{{ ansible_host.split(',') }}"  
+    survey_hosts: "{{ hosts_list.split(',') }}" 
   tasks:
-    - name: Add hosts dynamically
+    - name: Add hosts dynamically (hostname from survey, IP resolved via vCenter inventory)
       add_host:
         name: "{{ item }}"
         groups: dynamic_hosts
-      loop: "{{ ansible_hosts_list }}"
+      loop: "{{ survey_hosts }}"
 
 - name: Verify service status on all hosts
   hosts: dynamic_hosts
   become: yes
+  gather_facts: false
   vars:
     service_name: "{{ service_name }}"
   tasks:
@@ -26,4 +27,4 @@
 
     - name: Show service status
       debug:
-        msg: "{{ inventory_hostname }}: {{ service_name }} is {{ 'running' if service_status.status.ActiveState == 'active' else 'stopped' }}"
+        msg: "{{ inventory_hostname }} (IP: {{ hostvars[inventory_hostname].ansible_host }}): {{ service_name }} is {{ 'running' if service_status.status.ActiveState == 'active' else 'stopped' }}"
